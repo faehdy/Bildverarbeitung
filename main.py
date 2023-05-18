@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         img = cv2.imread(self.img_path)
         coin_img_seg = segment_util(img) * 255
-        cv2.imwrite(r'results/coins_seg.png', coin_img_seg)
+        cv2.imwrite('ue2/Bildverarbeitung/results/coins_seg.png', coin_img_seg)
         self.print_edited_img(coin_img_seg)
 
 
@@ -80,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         img = cv2.imread(self.img_path)[:, :, 0] / 255.
         img_close = close_hole_util(img) * 255
-        cv2.imwrite(r'results/coins_close.png', img_close)
+        cv2.imwrite('ue2/Bildverarbeitung/results/coins_close.png', img_close)
         self.print_edited_img(img_close)
 
 
@@ -99,7 +99,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         text = cv2.imread(self.img_path)[:, :, 0] / 255.
         letter_not = cv2.imread('inputs/text_m_inv.png')[:, :, 0] / 255.   
         text_recog_results = text_recog_util(text, letter_not) * 255
-        cv2.imwrite('results/text_recog_results.png', text_recog_results)
+        cv2.imwrite('ue2/Bildverarbeitung/results/text_recog_results.png', text_recog_results)
         self.print_edited_img(text_recog_results)
 
 
