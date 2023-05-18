@@ -69,7 +69,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         img = cv2.imread(self.img_path)
         coin_img_seg = segment_util(img) * 255
-        cv2.imwrite('results/coins_seg.png', coin_img_seg)
+        cv2.imwrite(r'results/coins_seg.png', coin_img_seg)
         self.print_edited_img(coin_img_seg)
 
 
@@ -80,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         img = cv2.imread(self.img_path)[:, :, 0] / 255.
         img_close = close_hole_util(img) * 255
-        cv2.imwrite('results/coins_close.png', img_close)
+        cv2.imwrite(r'results/coins_close.png', img_close)
         self.print_edited_img(img_close)
 
 
@@ -91,7 +91,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         img = cv2.imread(self.img_path)[:, :, 0]
         img_instances = instance_segmentation_util(img) * 255
-        cv2.imwrite('results/coins_instances.png', img_instances)
+        cv2.imwrite('ue2/Bildverarbeitung/results/coins_instance_segmentation.png', img_instances)
         self.print_edited_img(img_instances)
 
     # --------------------------------- Q 2.2 ---------------------------------------
