@@ -9,14 +9,14 @@ from skimage.measure import label
 
 
 # --------------------------------- Zusatzaufgabe ---------------------------------------
-def segment_util(img):
-    """
-    Given an input image, output the segmentation result
-    Input:  
-        img:        n x m x 3, values are within [0,255]
-    Output:
-        img_seg:    n x m
-    """ 
+# def segment_util(img):
+#     """
+#     Given an input image, output the segmentation result
+#     Input:  
+#         img:        n x m x 3, values are within [0,255]
+#     Output:
+#         img_seg:    n x m
+#     """ 
     
     
     
@@ -78,8 +78,15 @@ def close_hole_util(img):
     Output:
         closed_img: n x m
     """
-    ## TODO
-    closed_img = ...
+    
+    # inflate the image using cv2.dilate
+    kernel = np.ones((3,3),np.uint8)
+    dilated = cv.dilate(img, kernel, iterations = 2)
+
+    # erode the image using cv2.erode
+    eroded = cv.erode(dilated, kernel, iterations = 2)
+
+    closed_img = eroded
 
     return closed_img
 
@@ -91,8 +98,46 @@ def instance_segmentation_util(img):
     Output:
         instance_seg_img:    n x m x 3, different coin instances have different colors
     """
-    ## TODO
-    instance_seg_img = ...
+    # Use distance transform and normalization
+    img = cv.medianBlur(img,3)
+    dist_transform = cv.distanceTransform(img,cv.DIST_L2,3)
+    _, sure_fg = cv.threshold(dist_transform,0.32*dist_transform.max(),255,0)
+
+    # Find sure background area
+    kernel = np.ones((3,3),np.uint8)
+    sure_bg = cv.dilate(img, kernel, iterations = 2)
+
+    # Subtract the sure foreground from the sure background
+    sure_fg = np.uint8(sure_fg)
+    unknown = cv.subtract(sure_bg,sure_fg)
+
+    # Marker labelling
+    ret, markers = cv.connectedComponents(sure_fg)
+
+    # Add one to all labels so that sure background is not 0, but 1
+    markers = markers+1
+
+    # Now, mark the region of unknown with zero
+    markers[unknown==255] = 0
+
+    # Apply the watershed algorithm
+    img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
+    markers = cv.watershed(img,markers)
+
+    # Color boundaries in black
+    img[markers == -1] = [0,0,0]
+
+    # Create a random colormap
+    rand_color = lambda: (int(random.random()*255), int(random.random()*255), int(random.random()*255))
+    color_map = [rand_color() for _ in range(np.max(markers)+1)]
+
+    instance_seg_img = np.zeros((img.shape[0], img.shape[1], 3), dtype=np.uint8)
+    for i in range(markers.shape[0]):
+        for j in range(markers.shape[1]):
+            instance_seg_img[i,j] = color_map[markers[i,j]]
+    instance_seg_img[markers==-1] = [0,0,0]
+
+    plt.imshow(sure_fg, cmap='gray')
 
     return instance_seg_img
 
