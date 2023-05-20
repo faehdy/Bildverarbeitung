@@ -97,7 +97,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     # --------------------------------- Q 2.2 ---------------------------------------
     def text_recog(self):
         text = cv2.imread(self.img_path)[:, :, 0] / 255.
-        letter_not = cv2.imread('inputs/text_m_inv.png')[:, :, 0] / 255.   
+        letter_not = cv2.imread('ue2/Bildverarbeitung/inputs/text_m_inv.png')[:, :, 0] / 255.   
         text_recog_results = text_recog_util(text, letter_not) * 255
         cv2.imwrite('ue2/Bildverarbeitung/results/text_recog_results.png', text_recog_results)
         self.print_edited_img(text_recog_results)
