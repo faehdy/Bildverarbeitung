@@ -152,7 +152,12 @@ def text_recog_util(text, letter_not):
     """
     from scipy.ndimage import binary_erosion as erode
     from scipy.ndimage import binary_dilation as dilate
-    ## TODO
-    text_er_dil = ...
 
-    return text_er_dil
+
+    __unnecessary1__, text_binary = cv.threshold(text, 0.6, 1, cv.THRESH_BINARY_INV)
+    __unnecessary2__, letter_binary = cv.threshold(letter_not, 0.6, 1, cv.THRESH_BINARY)
+
+    img_err = erode(text_binary, letter_binary)
+    img_dil = dilate(img_err, letter_binary)
+
+    return img_dil
