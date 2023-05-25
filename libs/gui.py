@@ -85,6 +85,7 @@ class Ui_MainWindow(object):
         self.menuMorphology.addAction(self.actionInstanceSeg)
         self.menuEdit.addAction(self.menuMorphology.menuAction())
         self.menuEdit.addAction(self.actionText_recog)
+        self.menuEdit.addAction(self.actionCanny)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
 

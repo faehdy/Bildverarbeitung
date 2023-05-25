@@ -9,33 +9,6 @@ from skimage.measure import label
 
 
 # --------------------------------- Zusatzaufgabe ---------------------------------------
-# def segment_util(img):
-#     """
-#     Given an input image, output the segmentation result
-#     Input:  
-#         img:        n x m x 3, values are within [0,255]
-#     Output:
-#         img_seg:    n x m
-#     """ 
-    
-    
-    
-    # # Convert the image to grayscale
-    # gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
-    # # Apply Gaussian blur to reduce noise
-    # blurred = cv.GaussianBlur(gray, (5, 5), 0)
-
-    # # Apply Otsu's thresholding method to segment the image
-    # _, thresh = cv.threshold(blurred, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-
-    # # Perform morphological operations to remove small noise - opening
-    # # To remove holes we can use closing
-    # kernel = np.ones((3,3),np.uint8)
-    # opening = cv.morphologyEx(thresh, cv.MORPH_OPEN, kernel, iterations = 2)
-    # closing = cv.morphologyEx(opening, cv.MORPH_CLOSE, kernel, iterations = 2)
-
-    # return closing
 
 def segment_util(img):
     """
@@ -114,7 +87,7 @@ def instance_segmentation_util(img):
     # Marker labelling
     ret, markers = cv.connectedComponents(sure_fg)
 
-    # Add one to all labels so that sure background is not 0, but 1
+    # +1 bc the background needs a pixel too
     markers = markers+1
 
     # Now, mark the region of unknown with zero
@@ -124,7 +97,7 @@ def instance_segmentation_util(img):
     img = cv.cvtColor(img, cv.COLOR_GRAY2BGR)
     markers = cv.watershed(img,markers)
 
-    # Color boundaries in black
+    # Color boundaries in black, 3 Chanels bc of RGB    
     img[markers == -1] = [0,0,0]
 
     # Create a random colormap
@@ -153,11 +126,14 @@ def text_recog_util(text, letter_not):
     from scipy.ndimage import binary_erosion as erode
     from scipy.ndimage import binary_dilation as dilate
 
+    #Make the text and the letter binary
 
     __unnecessary1__, text_binary = cv.threshold(text, 0.6, 1, cv.THRESH_BINARY_INV)
     __unnecessary2__, letter_binary = cv.threshold(letter_not, 0.6, 1, cv.THRESH_BINARY)
 
+    # iterate over every pixel and everywhere where the letter is, erode the text and mark the centroid pixel
     img_err = erode(text_binary, letter_binary)
+    # iterate over the eroded image and dilate all of the eroded pixels to get the original letters back.
     img_dil = dilate(img_err, letter_binary)
 
     return img_dil
