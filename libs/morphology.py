@@ -30,7 +30,7 @@ def segment_util(img):
     fgdModel = np.zeros((1, 65), np.float64)
 
     # Run GrabCut algorithm
-    cv.grabCut(img, mask, rectangle, bgdModel, fgdModel, 20, cv.GC_INIT_WITH_RECT)
+    cv.grabCut(img, mask, rectangle, bgdModel, fgdModel, 16, cv.GC_INIT_WITH_RECT)
 
     # Create mask where sure and likely backgrounds set to 0, otherwise 1
     mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
@@ -103,8 +103,9 @@ def instance_segmentation_util(img):
     # Create a random colormap
     rand_color = lambda: (int(random.random()*255), int(random.random()*255), int(random.random()*255))
     color_map = [rand_color() for _ in range(np.max(markers)+1)]
-
+    # Create the instance segmentation image as empty image
     instance_seg_img = np.zeros((img.shape[0], img.shape[1], 3), dtype=np.uint8)
+    # Iterate over the markers and color the instance segmentation image
     for i in range(markers.shape[0]):
         for j in range(markers.shape[1]):
             instance_seg_img[i,j] = color_map[markers[i,j]]
