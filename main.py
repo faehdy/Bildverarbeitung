@@ -107,10 +107,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     # --------------------------------- Q 2.3 ---------------------------------------
     def canny_edge_detector(self):
         print('Path: ', self.img_path)
-        img = cv2.imread(self.img_path)[:, :, 0] / 255.
+        # img = cv2.imread(self.img_path)[:, :, 0] / 255.
+        img = cv2.imread('path/to/image.jpg')
+        print(img)  # print the image variable to check if it is None or not
+
         img_canny = canny_edge_detector(img) * 255
         cv2.imwrite('ue2/Bildverarbeitung/results/canny_edge_detector.png', img_canny)
         self.print_edited_img(img_canny)
+
+    
+  
+
 
 
 if __name__=='__main__':
