@@ -22,20 +22,20 @@ def segment_util(img):
     # Define an initial rectangle that includes the whole image
     rectangle = (0, 0, img.shape[1] - 1, img.shape[0] - 1)
 
-    # Create initial mask
+    # Create zero mask
     mask = np.zeros(img.shape[:2], np.uint8)
 
-    # Create two arrays used by the GrabCut algorithm internally
+    # Create two arrays used for GrabCur algorithm
     bgdModel = np.zeros((1, 65), np.float64)
     fgdModel = np.zeros((1, 65), np.float64)
 
-    # Run GrabCut algorithm
+
     cv.grabCut(img, mask, rectangle, bgdModel, fgdModel, 16, cv.GC_INIT_WITH_RECT)
 
-    # Create mask where sure and likely backgrounds set to 0, otherwise 1
+    # Create mask, sure and likely backgrounds set  0, otherwise 1
     mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
 
-    # Multiply image with new mask to subtract background
+    # Multiply image wiht new mask to subtract background
     img = img * mask2[:, :, np.newaxis]
 
 
@@ -52,11 +52,11 @@ def close_hole_util(img):
         closed_img: n x m
     """
     
-    # inflate the image using cv2.dilate
+    # inflate the image 
     kernel = np.ones((3,3),np.uint8)
     dilated = cv.dilate(img, kernel, iterations = 2)
 
-    # erode the image using cv2.erode
+    # erode the image using 
     eroded = cv.erode(dilated, kernel, iterations = 2)
 
     closed_img = eroded
