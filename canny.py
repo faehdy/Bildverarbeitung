@@ -47,8 +47,8 @@ def non_max_suppression(magnitude, direction):
     return Z
 
 
-def canny_edge_detector(input_img, sigma = 1):
-    input_img=cv2.imread('inputs/grossmuenster.png', 0).astype('float')
+def canny_edge_detector(filepath, sigma = 1):
+    input_img=cv2.imread(filepath, 0).astype('float')
     plt.figure(figsize=(5, 5),dpi=DPI)
     plt.xticks([]), plt.yticks([])
     plt.imshow(input_img, cmap = 'gray')
@@ -78,6 +78,8 @@ def canny_edge_detector(input_img, sigma = 1):
     magnitude = np.sqrt(I_x**2 + I_y**2)
     direction = np.arctan2(I_y, I_x)
 
+    
+
 
 
     thresh= 0.1 * magnitude.max()
@@ -88,4 +90,8 @@ def canny_edge_detector(input_img, sigma = 1):
 
     edges = non_max_suppression(magnitude, direction)
     edges = np.where(edges > 0, 255, 0)
+
+    plt.imsave('canny.png', edges, cmap='gray')
+
+    return edges
 

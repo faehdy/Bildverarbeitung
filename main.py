@@ -97,7 +97,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # --------------------------------- Q 2.2 ---------------------------------------
     def text_recog(self):
-        print('Path: ', self.img_path)
         text = cv2.imread(self.img_path)[:, :, 0] / 255.
         letter_not = cv2.imread('ue2/Bildverarbeitung/inputs/text_m_inv.png')[:, :, 0] / 255.   
         text_recog_results = text_recog_util(text, letter_not) * 255
@@ -106,12 +105,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     # --------------------------------- Q 2.3 ---------------------------------------
     def canny_edge_detector(self):
-        print('Path: ', self.img_path)
-        # img = cv2.imread(self.img_path)[:, :, 0] / 255.
-        img = cv2.imread('path/to/image.jpg')
-        print(img)  # print the image variable to check if it is None or not
-
-        img_canny = canny_edge_detector(img) * 255
+        img_canny = canny_edge_detector(self.img_path)
         cv2.imwrite('ue2/Bildverarbeitung/results/canny_edge_detector.png', img_canny)
         self.print_edited_img(img_canny)
 
